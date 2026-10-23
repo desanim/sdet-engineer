@@ -9,6 +9,12 @@ import sys
 import time
 import urllib.request
 
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 
 def wait_for_server(url: str, timeout: int = 15) -> bool:
     start_time = time.time()
@@ -35,6 +41,7 @@ def main():
 
     server_process = subprocess.Popen(
         [sys.executable, server_script],
+        cwd=case_study_dir,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )

@@ -4,8 +4,15 @@ Validates: Auth -> SSE Token Streaming (TTFT) -> Sandbox Container Lifecycle -> 
 """
 import asyncio
 import json
+import sys
 import time
 import httpx
+
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 BASE_URL = "http://127.0.0.1:8088"
 
@@ -96,7 +103,7 @@ async def run_main_flows():
 
         # Step 6: Final Credits Audit
         print("\n[Step 6] Verifying Final Account State...")
-        profile_res = await client.get("/api/v1/user/profile", headers={"user": f"Bearer {token}"})
+        profile_res = await client.get("/api/v1/user/profile", headers={"Authorization": f"Bearer {token}"})
         assert profile_res.status_code == 200
         current_credits = profile_res.json()["credits"]
         print(f" [✓] Final Credits: {current_credits} (Accurately decremented by 1 from {initial_credits})")

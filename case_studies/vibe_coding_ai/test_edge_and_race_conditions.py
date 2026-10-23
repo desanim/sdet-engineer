@@ -8,7 +8,14 @@ Validates:
 5. Invalid Sandbox Lifecycle Recovery
 """
 import asyncio
+import sys
 import httpx
+
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 BASE_URL = "http://127.0.0.1:8088"
 
@@ -32,7 +39,7 @@ async def test_credit_race_condition(simulate_vulnerability: bool = False):
         prompt_payload = {"prompt": "Pre-consume credit", "target_framework": "react"}
         await client.post("/api/v1/ai/generate-stream", json=prompt_payload, headers=headers)
 
-        profile = await client.get("/api/v1/user/profile", headers={"user": f"Bearer {token}"})
+        profile = await client.get("/api/v1/user/profile", headers=headers)
         available_credits = profile.json()["credits"]
         print(f" -> Setup: User '{username}' has exactly {available_credits} credits.")
 
@@ -56,7 +63,7 @@ async def test_credit_race_condition(simulate_vulnerability: bool = False):
 
         print(f" -> Results: 200 OK (Allowed): {success_count} | 402 Payment Required: {payment_required_count}")
 
-        final_profile = await client.get("/api/v1/user/profile", headers={"user": f"Bearer {token}"})
+        final_profile = await client.get("/api/v1/user/profile", headers=headers)
         final_credits = final_profile.json()["credits"]
         print(f" -> Final credit balance: {final_credits}")
 

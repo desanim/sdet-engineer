@@ -97,8 +97,8 @@ async def login(req: LoginRequest):
 
 
 @app.get("/api/v1/user/profile", tags=["User"])
-async def get_user_profile(user: dict = Header(None)):
-    auth_user = get_authenticated_user(user)
+async def get_user_profile(authorization: Optional[str] = Header(None)):
+    auth_user = get_authenticated_user(authorization)
     current_data = USERS_DB[auth_user["user_id"]]
     return {
         "user_id": auth_user["user_id"],
@@ -242,4 +242,4 @@ async def export_to_github(req: ExportGitHubRequest, authorization: Optional[str
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("mock_vibe_server:app", host="0.0.0.0", port=8088, reload=False)
+    uvicorn.run(app, host="127.0.0.1", port=8088)
