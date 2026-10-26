@@ -10,6 +10,7 @@ A practical reference set for testing whether a digital product is understandabl
 | [Test plan template](test-plan-template.md) | Turn a product flow into a reviewable UX test plan and checklist |
 | [Bug report template](bug-report-template.md) | Write evidence-based UX and accessibility defects developers can reproduce |
 | [Accessibility reference library](accessibility-reference.md) | Standards, learning resources, tools, and English/Chinese references |
+| [Accessibility reference guide (Vietnamese)](accessibility-reference-vi.md) | Explains each source: what it covers, how QA uses it, and its limits |
 | [16-week accessibility QA roadmap](a11y-16-week-roadmap.md) | A QA-first study plan with weekly portfolio deliverables |
 | [Accessibility audit report template](accessibility-audit-template.md) | Scope and report a manual/automated accessibility review with traceable evidence |
 
