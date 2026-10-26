@@ -37,9 +37,9 @@ venv.bak/
 *.jtl
 *.log
 jmeter.log
-reports/run_*
-test_data/*.csv
-!test_data/.gitkeep
+performance/reports/run_*
+performance/test_data/*.csv
+!performance/test_data/.gitkeep
 
 # IDE and OS
 .vscode/
