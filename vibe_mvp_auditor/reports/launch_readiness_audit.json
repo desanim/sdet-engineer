@@ -1,0 +1,86 @@
+{
+  "target_url": "http://127.0.0.1:8888",
+  "grade": "F",
+  "verdict": "\ud83d\udd34 DO NOT LAUNCH (Critical Security Leak or Severe Instability)",
+  "timestamp": 1793023878.3275788,
+  "modules": {
+    "secrets_scan": {
+      "status": "COMPLETED",
+      "assets_scanned": 2,
+      "scanned_urls": [
+        "http://127.0.0.1:8888",
+        "http://127.0.0.1:8888/static/bundle.js"
+      ],
+      "leak_count": 2,
+      "critical_leaks": 2,
+      "findings": [
+        {
+          "secret_type": "Stripe Secret Key",
+          "severity": "CRITICAL",
+          "source": "JS Bundle: /static/bundle.js",
+          "masked_value": "sk_test_...mnop",
+          "impact": "Full access to Stripe billing account. Attackers can create charges or drain balances.",
+          "remediation": "Move Stripe secret key to backend environment variables. Never expose in client code."
+        },
+        {
+          "secret_type": "OpenAI API Key",
+          "severity": "CRITICAL",
+          "source": "JS Bundle: /static/bundle.js",
+          "masked_value": "sk-proj-...hhhh",
+          "impact": "Allows attackers to drain OpenAI credits and access organization fine-tuned models.",
+          "remediation": "Proxy all LLM requests through a backend server (e.g. Next.js Route Handler / FastAPI)."
+        }
+      ]
+    },
+    "spike_load_test": {
+      "status": "COMPLETED",
+      "virtual_users": 30,
+      "duration_sec": 5.12,
+      "total_requests": 849,
+      "throughput_rps": 166.0,
+      "success_2xx": 849,
+      "errors_4xx": 0,
+      "errors_5xx": 0,
+      "error_5xx_rate_pct": 0.0,
+      "latency_p50_ms": 88.1,
+      "latency_p90_ms": 213.5,
+      "latency_p95_ms": 274.2,
+      "latency_p99_ms": 450.5,
+      "launch_ready": true
+    },
+    "error_crawler": {
+      "status": "COMPLETED",
+      "assets_checked": 2,
+      "ui_crashes_found": 0,
+      "broken_assets_found": 2,
+      "crashes": [],
+      "broken_assets": [
+        {
+          "asset_type": "Image",
+          "url": "http://127.0.0.1:8888/static/non-existent-sample.png",
+          "status_code": 404,
+          "severity": "MODERATE",
+          "message": "Broken image source returned HTTP 404."
+        },
+        {
+          "asset_type": "Favicon",
+          "url": "http://127.0.0.1:8888/favicon.ico",
+          "status_code": 404,
+          "severity": "MINOR",
+          "message": "Missing /favicon.ico (Causes 404 log clutter in production)."
+        }
+      ]
+    },
+    "mobile_ux": {
+      "status": "COMPLETED",
+      "passed_checks": 3,
+      "issues_count": 0,
+      "passes": [
+        "Valid Mobile Viewport meta tag present (<meta name='viewport' content='width=device-width, initial-scale=1'>).",
+        "Social Sharing OpenGraph Tags (og:title, og:description, og:image) are fully configured for Product Hunt / Twitter.",
+        "No hardcoded fixed-width layout traps detected."
+      ],
+      "findings": []
+    }
+  }
+}

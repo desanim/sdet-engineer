@@ -76,6 +76,11 @@ sdet-engineer/
 │   ├── a11y_engine/                # DOM Auditor & W3C Color Contrast math calculator
 │   ├── test_specifications/        # WCAG 2.1 case matrix (Skill 07/19) & 10 UX Heuristics (Skill 21)
 │   └── run_a11y_audit.py           # Automated accessibility scanner & report generator
+├── vibe_mvp_auditor/               # Vibe-App MVP Launch-Readiness & Security Auditor
+│   ├── scanners/                   # Secrets leak, 50-VU spike test, React crash crawler, mobile UX gate
+│   ├── mock_target_mvp/            # Sample Vibe-coded SaaS app with realistic test vulnerabilities
+│   ├── audit_cli.py                # Single-command CLI generating Executive Launch Scorecards (Grade A to F)
+│   └── README.md                   # Complete module guide and grading scale
 ├── config/
 │   └── web3_sla_config.json        # SLA thresholds: Min TPS, Max Latency, Max Failure Rate
 ├── test_data/
@@ -128,6 +133,16 @@ python sdet_core/rpc_runner.py --threads 20 --rampup 5 --duration 30 --host loca
 Audit the DApp user interface for screen reader accessibility, keyboard focus traps, and color contrast:
 ```bash
 python ux_accessibility_testing/run_a11y_audit.py
+```
+
+### 7. Run Vibe-App MVP Launch-Readiness & Security Audit
+Audit any Vibe-Coded web app for leaked API keys, traffic spike resilience, and broken mobile viewports:
+```bash
+# Audit the included mock MVP (Zero setup):
+python vibe_mvp_auditor/audit_cli.py
+
+# Or audit any live public MVP URL:
+python vibe_mvp_auditor/audit_cli.py --target-url https://my-vibe-app.vercel.app
 ```
 
 ---
