@@ -51,7 +51,7 @@ flowchart TD
 ## 📂 Repository Structure
 
 ```
-sdet-performance-engine/
+sdet-engineer/
 ├── mock_api/
 │   ├── app.py                     # Realistic FastAPI target (Auth, Catalog, Orders)
 │   └── requirements.txt           # FastAPI dependencies
