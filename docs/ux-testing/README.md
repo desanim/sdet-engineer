@@ -9,6 +9,9 @@ A practical reference set for testing whether a digital product is understandabl
 | [Foundations](foundations.md) | Scope UX testing, choose methods, plan sessions, assess findings, and measure outcomes |
 | [Test plan template](test-plan-template.md) | Turn a product flow into a reviewable UX test plan and checklist |
 | [Bug report template](bug-report-template.md) | Write evidence-based UX and accessibility defects developers can reproduce |
+| [Accessibility reference library](accessibility-reference.md) | Standards, learning resources, tools, and English/Chinese references |
+| [16-week accessibility QA roadmap](a11y-16-week-roadmap.md) | A QA-first study plan with weekly portfolio deliverables |
+| [Accessibility audit report template](accessibility-audit-template.md) | Scope and report a manual/automated accessibility review with traceable evidence |
 
 ## Working model
 
@@ -30,7 +33,7 @@ Use a fictional or public demo e-commerce product. Examine product discovery, pr
 - Accessibility checks against WCAG 2.2
 - Retest notes and a short reflection on limitations
 
-See [Foundations](foundations.md) for method selection and [Test plan template](test-plan-template.md) to start the case.
+See [Foundations](foundations.md) for method selection and [Test plan template](test-plan-template.md) to start the case. For a specialist accessibility case, start with the [reference library](accessibility-reference.md), follow the [roadmap](a11y-16-week-roadmap.md), and use the [audit report template](accessibility-audit-template.md).
 
 ## Reference sources
 
