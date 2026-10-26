@@ -1,0 +1,26 @@
+{
+  "global_blockchain_sla": {
+    "min_sustained_tps": 40.0,
+    "max_p95_rpc_latency_ms": 300,
+    "max_p99_rpc_latency_ms": 600,
+    "max_error_rate_percent": 0.5
+  },
+  "rpc_method_sla": {
+    "RPC_eth_blockNumber": {
+      "max_p95_ms": 80,
+      "max_error_rate_percent": 0.1
+    },
+    "RPC_eth_getBalance": {
+      "max_p95_ms": 150,
+      "max_error_rate_percent": 0.2
+    },
+    "RPC_eth_call_ERC20": {
+      "max_p95_ms": 180,
+      "max_error_rate_percent": 0.2
+    },
+    "RPC_eth_sendRawTransaction": {
+      "max_p95_ms": 350,
+      "max_error_rate_percent": 0.5
+    }
+  }
+}
