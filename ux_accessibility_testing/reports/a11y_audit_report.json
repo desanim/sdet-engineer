@@ -1,0 +1,105 @@
+{
+  "compliance_score_percent": 75.0,
+  "total_checks": 20,
+  "passed_count": 15,
+  "violation_count": 5,
+  "violations": [
+    {
+      "criterion": "1.1.1 Non-text Content (Level A)",
+      "severity": "Critical",
+      "element": "<img src=\"eth-logo.png\">",
+      "message": "Image element completely missing 'alt' attribute. Screen readers will read filename.",
+      "remediation": "Add meaningful alt=\"Ethereum Logo\" or alt=\"\" if decorative."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "severity": "Critical",
+      "element": "<button id=\"settings-btn\">",
+      "message": "Button contains only an icon with no accessible text or aria-label.",
+      "remediation": "Add aria-label=\"Transaction Settings\" to the icon button."
+    },
+    {
+      "criterion": "2.1.1 Keyboard Accessible (Level A)",
+      "severity": "Critical",
+      "element": "<div class=\"slippage-badge\" onclick=\"...\">",
+      "message": "Custom interactive control is built with a non-semantic element without keyboard accessibility.",
+      "remediation": "Replace with native <button> or add role='button' and tabindex='0' with Enter/Space key handlers."
+    },
+    {
+      "criterion": "2.1.1 Keyboard Accessible (Level A)",
+      "severity": "Critical",
+      "element": "<div class=\"slippage-badge\" onclick=\"...\">",
+      "message": "Custom interactive control is built with a non-semantic element without keyboard accessibility.",
+      "remediation": "Replace with native <button> or add role='button' and tabindex='0' with Enter/Space key handlers."
+    },
+    {
+      "criterion": "1.4.3 Contrast (Minimum) (Level AA)",
+      "severity": "Serious",
+      "element": "<div class=\"low-contrast-warning\">",
+      "message": "Color contrast ratio 3.87:1 fails WCAG 2.1 Level AA requirement (min 4.5:1).",
+      "remediation": "Increase text brightness to at least #9da3b4 for a ratio >= 4.5:1."
+    }
+  ],
+  "passes": [
+    {
+      "criterion": "2.4.1 Bypass Blocks (Level A)",
+      "detail": "Skip-to-content link found and correctly targets element #main-content."
+    },
+    {
+      "criterion": "1.1.1 Non-text Content (Level A)",
+      "detail": "Image <img src=\"usdc-logo.png\"> has valid alt attribute: \"USDC Logo\"."
+    },
+    {
+      "criterion": "1.3.1 Info and Relationships (Level A)",
+      "detail": "Input #pay-amount-input has programmatic accessible label."
+    },
+    {
+      "criterion": "1.3.1 Info and Relationships (Level A)",
+      "detail": "Input #receive-amount-input has programmatic accessible label."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "detail": "Button #theme-toggle has accessible name: \"Toggle light and dark color theme\"."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "detail": "Button #connect-wallet-btn has accessible name: \"Connect Wallet\"."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "detail": "Button #pay-token-select has accessible name: \"Select source token, currently Ethereum (ETH)\"."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "detail": "Button #switch-direction-btn has accessible name: \"Switch token swap direction\"."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "detail": "Button #receive-token-select has accessible name: \"Select destination token, currently USD Coin (USDC)\"."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "detail": "Button #execute-swap-btn has accessible name: \"Enter an amount\"."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "detail": "Button #modal-close-btn has accessible name: \"Close transaction confirmation dialog\"."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "detail": "Button #modal-cancel-btn has accessible name: \"Cancel\"."
+    },
+    {
+      "criterion": "4.1.2 Name, Role, Value (Level A)",
+      "detail": "Button #modal-confirm-btn has accessible name: \"Confirm & Broadcast\"."
+    },
+    {
+      "criterion": "1.3.1 Landmarks Structure (Level A)",
+      "detail": "Document correctly uses primary HTML5 / ARIA landmarks: <header>, <nav>, and <main>."
+    },
+    {
+      "criterion": "4.1.2 Dialog Pattern (Level A)",
+      "detail": "Modal dialog correctly implements role='dialog', aria-modal='true', and aria-labelledby."
+    }
+  ]
+}

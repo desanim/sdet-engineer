@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeDEX - Web3 Token Swap & Liquidity</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+  <!-- WCAG 2.4.1 Bypass Blocks: Skip to Main Content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header / Navigation Landmark -->
+  <header role="banner" class="navbar">
+    <div class="nav-brand">
+      <span class="logo-icon" aria-hidden="true">⚡</span>
+      <h1 class="brand-title">VibeDEX</h1>
+    </div>
+
+    <nav role="navigation" aria-label="Main Navigation" class="nav-links">
+      <ul>
+        <li><a href="#swap" class="active" aria-current="page">Swap</a></li>
+        <li><a href="#pools">Pools</a></li>
+        <li><a href="#staking">Staking</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-actions">
+      <!-- Theme Toggle Button with accessible state -->
+      <button id="theme-toggle" class="btn btn-secondary" aria-label="Toggle light and dark color theme" aria-pressed="true">
+        <span id="theme-icon" aria-hidden="true">🌙</span>
+      </button>
+
+      <!-- Connect Wallet Button -->
+      <button id="connect-wallet-btn" class="btn btn-primary" aria-haspopup="dialog" aria-expanded="false">
+        Connect Wallet
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="main-content" role="main" class="container">
+    <section class="swap-card" aria-labelledby="swap-heading">
+      <div class="swap-header">
+        <h2 id="swap-heading" class="card-title">Swap Tokens</h2>
+        
+        <!-- VIOLATION A11Y-01: Icon button missing aria-label (WCAG 4.1.2 Name, Role, Value) -->
+        <button id="settings-btn" class="icon-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Token Input 1: You Pay -->
+      <div class="token-box">
+        <div class="token-box-header">
+          <label for="pay-amount-input">You Pay</label>
+          <span class="token-balance">Balance: 4.821 ETH</span>
+        </div>
+        <div class="token-box-input-row">
+          <input 
+            type="number" 
+            id="pay-amount-input" 
+            class="token-amount-input" 
+            placeholder="0.0" 
+            aria-describedby="pay-currency"
+            step="any"
+            min="0"
+          >
+          <button class="token-select-btn" id="pay-token-select" aria-label="Select source token, currently Ethereum (ETH)">
+            <!-- VIOLATION A11Y-02: Image missing alt attribute (WCAG 1.1.1 Non-text Content) -->
+            <img src="eth-logo.png" class="token-icon">
+            <span id="pay-currency">ETH</span>
+            <span class="arrow-down" aria-hidden="true">▾</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Swap Direction Switcher -->
+      <div class="swap-arrow-wrapper">
+        <button id="switch-direction-btn" class="switch-btn" aria-label="Switch token swap direction">
+          <span aria-hidden="true">⇅</span>
+        </button>
+      </div>
+
+      <!-- Token Input 2: You Receive -->
+      <div class="token-box">
+        <div class="token-box-header">
+          <label for="receive-amount-input">You Receive (Estimated)</label>
+          <span class="token-balance">Balance: 12,450.00 USDC</span>
+        </div>
+        <div class="token-box-input-row">
+          <input 
+            type="number" 
+            id="receive-amount-input" 
+            class="token-amount-input" 
+            placeholder="0.0" 
+            readonly 
+            aria-readonly="true"
+            aria-describedby="receive-currency"
+          >
+          <button class="token-select-btn" id="receive-token-select" aria-label="Select destination token, currently USD Coin (USDC)">
+            <img src="usdc-logo.png" class="token-icon" alt="USDC Logo">
+            <span id="receive-currency">USDC</span>
+            <span class="arrow-down" aria-hidden="true">▾</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Exchange Rate & Live Price Impact Region (ARIA Live Region) -->
+      <div class="trade-info" aria-live="polite" aria-atomic="true">
+        <div class="info-row">
+          <span>Exchange Rate</span>
+          <span id="current-rate">1 ETH = 3,124.50 USDC</span>
+        </div>
+        <div class="info-row">
+          <span>Network Fee</span>
+          <span id="gas-fee">~$2.40 (18 Gwei)</span>
+        </div>
+        
+        <!-- VIOLATION A11Y-03: Low Contrast Warning (WCAG 1.4.3 Minimum Contrast) -->
+        <!-- Text color #707080 on background #1a1a2e has ratio 2.6:1 (Required >= 4.5:1) -->
+        <div class="info-row low-contrast-warning">
+          <span>Price Impact Alert</span>
+          <span>High volatility detected in liquidity pool</span>
+        </div>
+      </div>
+
+      <!-- VIOLATION A11Y-04: Non-semantic Div Button without keyboard accessibility (WCAG 2.1.1 Keyboard) -->
+      <div id="mock-slippage-selector" class="slippage-box">
+        <span class="slippage-label">Slippage Tolerance:</span>
+        <div class="slippage-badge" onclick="alert('Slippage set to 0.5%')">0.5%</div>
+        <div class="slippage-badge" onclick="alert('Slippage set to 1.0%')">1.0%</div>
+      </div>
+
+      <!-- Main Action Button -->
+      <button id="execute-swap-btn" class="btn btn-primary btn-block btn-lg" disabled aria-disabled="true">
+        Enter an amount
+      </button>
+    </section>
+  </main>
+
+  <!-- Modal Dialog: Swap Review & Confirmation -->
+  <!-- Proper ARIA Dialog Pattern (WCAG 4.1.2 & 2.4.3 Focus Order) -->
+  <div id="swap-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-title">Confirm Swap Transaction</h3>
+        <button id="modal-close-btn" class="icon-btn" aria-label="Close transaction confirmation dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>You are swapping <strong>1.5 ETH</strong> for <strong>4,686.75 USDC</strong>.</p>
+        <p class="modal-note">Transactions cannot be undone once broadcast to the blockchain.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button id="modal-confirm-btn" class="btn btn-primary">Confirm & Broadcast</button>
+      </div>
+    </div>
+  </div>
+
+  <footer role="contentinfo" class="footer">
+    <p>&copy; 2026 VibeDEX Protocol. Conforms to WCAG 2.1 Level AA Accessibility Standards.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

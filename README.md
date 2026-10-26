@@ -71,6 +71,11 @@ sdet-engineer/
 │   ├── test_dex_swap_concurrency.py# MEV & Slippage concurrency test on AMM constant product pool
 │   ├── test_nonce_race_condition.py# Nonce collision and out-of-order execution test under high concurrency
 │   └── run_web3_suites.py          # Master runner for automated Web3 test suite execution
+├── ux_accessibility_testing/       # Web3 DApp UX & Accessibility (WCAG 2.1 AA) quality engineering
+│   ├── mock_dapp_ui/               # Interactive Token Swap DApp interface with accessible state management
+│   ├── a11y_engine/                # DOM Auditor & W3C Color Contrast math calculator
+│   ├── test_specifications/        # WCAG 2.1 case matrix (Skill 07/19) & 10 UX Heuristics (Skill 21)
+│   └── run_a11y_audit.py           # Automated accessibility scanner & report generator
 ├── config/
 │   └── web3_sla_config.json        # SLA thresholds: Min TPS, Max Latency, Max Failure Rate
 ├── test_data/
@@ -117,6 +122,12 @@ python app.py
 In terminal 2, launch the JMeter Non-GUI Orchestrator:
 ```bash
 python sdet_core/rpc_runner.py --threads 20 --rampup 5 --duration 30 --host localhost --port 8545
+```
+
+### 6. Run Web3 DApp UX & Accessibility (WCAG 2.1 AA) Audit
+Audit the DApp user interface for screen reader accessibility, keyboard focus traps, and color contrast:
+```bash
+python ux_accessibility_testing/run_a11y_audit.py
 ```
 
 ---
