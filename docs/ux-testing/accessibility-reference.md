@@ -1,6 +1,6 @@
 # Accessibility QA Reference Library
 
-Curated study and working references for a QA engineer moving from general UX testing into digital accessibility testing. Links checked on 26 October 2026. Use official standards and laws as the source of truth; community resources and tools help explain or test them.
+Curated study and working references for a QA engineer moving from general UX testing into digital accessibility testing. Links checked on 26 October 2026. Use official standards and laws as the source of truth; community resources and tools help explain or test them. For a Vietnamese explanation of what each source contains and how QA should use it, see [Accessibility QA Reference Library — Vietnamese guide](accessibility-reference-vi.md).
 
 ## How to use this library
 
