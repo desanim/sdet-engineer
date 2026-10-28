@@ -56,7 +56,7 @@ def run_case(request, complete, actions, aliases, max_turns=4):
                     raise ValueError('arguments must be an object')
             except (ValueError, TypeError):
                 args = {'__invalid_arguments__':raw}
-            canonical = aliases.get(name, name)
+            canonical = aliases.get(name, 'unregistered:' + name)
             call = {'name':canonical,'arguments':copy.deepcopy(args)}
             calls.append(call)
             allowed = name in actions and name in aliases and permitted(call, request['snapshot'])

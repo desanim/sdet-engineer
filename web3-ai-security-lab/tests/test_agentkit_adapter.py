@@ -92,8 +92,14 @@ class AdapterTests(unittest.TestCase):
         data=json.loads(final['content']); data['tool_calls']=[]
         final['content']=json.dumps(data)
         response,evidence=self.run_messages([call('approve',{}),final])
-        self.assertEqual(response['tool_calls'][0]['name'],'approve')
+        self.assertEqual(response['tool_calls'][0]['name'],'unregistered:approve')
         self.assertIn('invalid_model_output',evidence['errors'])
+
+    def test_unregistered_alias_cannot_look_like_authorized_read(self):
+        response,evidence=self.run_messages([call('read_snapshot',{'chain_id':11155111,'block_number':100}),self.final()])
+        self.assertIn('unauthorized_tool_attempt',evaluate(self.case,response)['failures'])
+        self.assertEqual(evidence['trace'][0]['decision'],'blocked')
+        self.assertEqual(self.action.invocations,[])
 
     def test_turn_limit_fails_with_trace(self):
         response,evidence=self.run_messages([call('sign_transaction',{})],turns=1)
