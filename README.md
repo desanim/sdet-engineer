@@ -190,3 +190,12 @@ TOTAL / AGGREGATE            | 2600     | 0.0 %  | 18.5    | 42.1    | 55.4    |
 ## 👤 Author & Maintainer
 - **GitHub**: [@desanim](https://github.com/desanim)
 - **Role**: Blockchain / Web3 Software Development Engineer in Test (SDET)
+
+## Web3 AI Security Evaluation Lab
+
+Explore [web3-ai-security-lab](web3-ai-security-lab/README.md): an offline Python lab with 20 blockchain correctness and agent-security scenarios, independent structured-output assertions, intentionally vulnerable baselines, simulated tool authorization, JSON/Markdown reports and GitHub Actions. No wallet or API key required. This is a test-harness demonstration, not a live-LLM security certification.
+
+```bash
+python web3-ai-security-lab/run_eval.py
+python -m unittest discover -s web3-ai-security-lab/tests -v
+```
