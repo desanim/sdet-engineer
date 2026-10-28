@@ -31,3 +31,15 @@ jobs:
           name: evaluation-${{ matrix.python-version }}
           path: web3-ai-security-lab/reports/
           if-no-files-found: warn
+  agentkit-sdk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install optional target dependencies
+        run: python -m pip install -r web3-ai-security-lab/targets/agentkit/requirements.txt
+      - name: Test actual SDK with scripted model and blocked network
+        run: python web3-ai-security-lab/targets/agentkit/test_sdk.py -v

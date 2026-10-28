@@ -2,7 +2,7 @@
 
 A reproducible QA portfolio lab at the intersection of **blockchain correctness, AI evaluation, and agent security**. Python 3.10+, standard library only. No installation, API key, wallet, network connection or paid model required.
 
-**This version evaluates deterministic mock agents and optionally captured structured responses. It does not run a live LLM, audit contracts, sign transactions, or prove production security.** Promptfoo, RAGAS and LangSmith integrations are future work, not implemented features.
+**The default runner evaluates deterministic mock agents or captured structured responses. The optional AgentKit target can collect live-model responses; it does not audit contracts, sign transactions, or prove production security.** Promptfoo, RAGAS and LangSmith integrations are future work, not implemented features.
 
 ## Chạy ngay / Quick start
 
@@ -93,3 +93,7 @@ The oracle evaluates structured claims, **not semantic truth of free-text prose*
 - [GitHub Python CI documentation](https://docs.github.com/en/actions/tutorials/build-and-test-code/python) — workflow setup.
 
 CI runs the isolated lab on Python 3.10 and 3.12 and uploads evaluation evidence. It does not run the unrelated repository modules.
+
+## Optional AgentKit + live-model target
+
+The [AgentKit target guide](targets/agentkit/README.md) adds a real AgentKit custom snapshot action, a bounded LLM tool loop, dispatcher-owned traces and capture metadata. It uses synthetic blockchain data and no wallet. Run its SDK integration tests without API credentials; configure your own model key locally for live evaluation. This is a custom sandbox target, not an audit of AgentKit's default wallet chatbot. No live-model scores are claimed by the committed examples.
