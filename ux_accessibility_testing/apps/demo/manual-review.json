@@ -1,0 +1,47 @@
+[
+  {
+    "id": "MAN-01",
+    "selector": "main, nav, dialog",
+    "rule": "Screen reader semantics",
+    "procedure": "NVDA + Firefox/Chrome and VoiceOver + Safari: read headings/landmarks, labels, description, dialog name and modal boundary.",
+    "status": "Needs review",
+    "impact": null,
+    "error": null
+  },
+  {
+    "id": "MAN-02",
+    "selector": "#amount, #amount-error, #status",
+    "rule": "Announcements and recovery",
+    "procedure": "With screen reader enabled, submit empty/invalid form, correct it and complete simulation. Verify error and success are announced once at the right time.",
+    "status": "Needs review",
+    "impact": null,
+    "error": null
+  },
+  {
+    "id": "MAN-03",
+    "selector": ":focus-visible, #review-dialog",
+    "rule": "Practical focus usability",
+    "procedure": "Keyboard through all controls; inspect visible, unobscured focus, sensible reading order and modal entry/exit at zoom and with assistive technology.",
+    "status": "Needs review",
+    "impact": null,
+    "error": null
+  },
+  {
+    "id": "MAN-04",
+    "selector": "body",
+    "rule": "Responsive usability and zoom",
+    "procedure": "Check 200%/400% browser zoom, text spacing, landscape, touch targets, forced colors and real mobile devices. 320px overflow smoke does not establish conformance.",
+    "status": "Needs review",
+    "impact": null,
+    "error": null
+  },
+  {
+    "id": "MAN-05",
+    "selector": "body",
+    "rule": "Content and full WCAG coverage",
+    "procedure": "Review instructions, error clarity, contrast in all states and remaining applicable WCAG 2.2 A/AA criteria; record reviewer, browser/AT versions and evidence.",
+    "status": "Needs review",
+    "impact": null,
+    "error": null
+  }
+]

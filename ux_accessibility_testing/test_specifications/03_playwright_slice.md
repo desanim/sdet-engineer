@@ -1,4 +1,6 @@
-# Browser slice: scope and acceptance criteria
+# Browser slice V1: historical scope and acceptance criteria
+
+This is the original six-case/two-project slice. For the current four-suite multi-device framework, see [04_web_framework.md](04_web_framework.md) and the module README.
 
 Target: `demo/`, a local-only simulated DApp. Original `mock_dapp_ui/` remains an intentionally defective static-audit fixture. No wallet connection or RPC calls.
 

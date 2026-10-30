@@ -12,15 +12,27 @@ amount.addEventListener('input', () => {
   estimate.value = valid() ? (Number(amount.value) * 3124.5).toFixed(2) : '0.00';
   status.textContent = '';
 });
-form.addEventListener('submit', event => {
+form.addEventListener('submit', async event => {
   event.preventDefault();
   if (!valid()) {
     error.textContent = 'Enter an amount greater than 0 and no more than 5 ETH.';
     error.hidden = false; amount.setAttribute('aria-invalid', 'true'); amount.focus(); return;
   }
   clearError();
-  document.querySelector('#dialog-description').textContent = `Simulate swapping ${amount.value} ETH for ${estimate.value} USDC. No funds will move.`;
-  dialog.showModal();
+  review.disabled = true; amount.readOnly = true;
+  status.textContent = 'Loading quote…';
+  try {
+    const response = await fetch('/api/quote', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: Number(amount.value) }), signal: AbortSignal.timeout(5000) });
+    if (!response.ok) throw new Error('Quote unavailable');
+    const quote = await response.json();
+    estimate.value = quote.receive.toFixed(2);
+    document.querySelector('#dialog-description').textContent = `Simulate swapping ${quote.amount} ETH for ${estimate.value} USDC. No funds will move.`;
+    status.textContent = '';
+    dialog.showModal();
+  } catch {
+    status.textContent = 'Quote unavailable. Please try again.';
+  } finally { review.disabled = false; amount.readOnly = false; }
+
 });
 document.querySelector('#cancel').addEventListener('click', () => dialog.close('cancel'));
 document.querySelector('#confirm').addEventListener('click', () => {
