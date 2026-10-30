@@ -190,3 +190,17 @@ TOTAL / AGGREGATE            | 2600     | 0.0 %  | 18.5    | 42.1    | 55.4    |
 ## 👤 Author & Maintainer
 - **GitHub**: [@desanim](https://github.com/desanim)
 - **Role**: Blockchain / Web3 Software Development Engineer in Test (SDET)
+
+## Browser accessibility automation (new vertical slice)
+
+See [Playwright + TypeScript + axe-core setup, evidence and manual review](ux_accessibility_testing/README.md).
+
+```bash
+cd ux_accessibility_testing
+npm ci
+npx playwright install chromium
+npm run typecheck
+npm test
+```
+
+This runs an isolated local demo and writes JSON, Markdown and HTML under `ux_accessibility_testing/reports/playwright/`. Existing Python static-audit flows remain independent. Automated passes do not establish WCAG conformance.

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VibeDEX • Accessibility demo</title><link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a id="skip" class="skip" href="#main">Skip to main content</a>
+  <header>
+    <p class="brand">VibeDEX / QA lab</p>
+    <nav aria-label="Main"><a id="nav-swap" href="#main" aria-current="page">Swap</a><a id="nav-about" href="#about">About this demo</a></nav>
+  </header>
+  <main id="main" tabindex="-1">
+    <h1>Review a token swap</h1>
+    <p>Local simulation. No wallet, network transaction or funds required.</p>
+    <section aria-labelledby="swap-heading">
+      <h2 id="swap-heading">Swap ETH for USDC</h2>
+      <form id="swap-form" novalidate>
+        <label for="amount">Amount in ETH</label>
+        <p id="amount-hint">Enter an amount greater than 0 and no more than 5 ETH.</p>
+        <input id="amount" name="amount" type="number" inputmode="decimal" min="0.000001" max="5" step="any" required aria-describedby="amount-hint amount-error">
+        <p id="amount-error" class="error" hidden></p>
+        <p>Estimated USDC: <output id="estimate" for="amount">0.00</output></p>
+        <button id="review" type="submit">Review swap</button>
+      </form>
+      <p id="status" role="status" aria-label="Simulation result" aria-live="polite"></p>
+    </section>
+    <section id="about" aria-labelledby="about-heading" tabindex="-1">
+      <h2 id="about-heading">About this demo</h2>
+      <p>The fixed demo rate is 3,124.50 USDC per ETH. Automated checks cover selected states; manual accessibility review remains required.</p>
+    </section>
+  </main>
+  <dialog id="review-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+    <h2 id="dialog-title">Confirm simulated swap</h2>
+    <p id="dialog-description"></p>
+    <div class="actions"><button id="cancel" autofocus>Cancel</button><button id="confirm">Confirm simulation</button></div>
+  </dialog>
+  <footer><p>Accessibility QA portfolio • No WCAG conformance claim</p></footer>
+  <script src="/app.js"></script>
+</body>
+</html>

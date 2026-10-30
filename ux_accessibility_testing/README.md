@@ -1,3 +1,82 @@
+# Accessibility QA: browser automation + static audit
+
+## Start here: Playwright + TypeScript + axe-core
+
+The runnable browser slice targets `demo/`, an isolated simulated swap flow. It requires no wallet, API key, Python or live network service. The existing `mock_dapp_ui/` intentionally contains defects and remains the target of the independent Python static audit.
+
+From the repository root (Node.js 22+ and npm):
+
+```bash
+cd ux_accessibility_testing
+npm ci
+npx playwright install chromium
+npm run typecheck
+npm test
+```
+
+On Linux CI, install OS browser dependencies using `npx playwright install --with-deps chromium`. Browser installation may need system package permissions. `npm test` starts and stops the loopback demo server automatically on port 4173 (port must be free), runs desktop + mobile-emulated Chromium, and returns a nonzero exit code on automated failure.
+
+```bash
+npm run demo          # manual exploration: http://127.0.0.1:4173
+npm run test:headed   # local visible browser (desktop display required)
+npm run report        # open Playwright HTML report
+```
+
+Stop a manually running demo before running tests. No external target/base URL is supported by this first slice; it always tests the local fixture.
+
+### Blueprint and file inventory
+
+```text
+ux_accessibility_testing/
+├── demo/                          # NEW isolated accessible baseline
+│   ├── index.html                 # landmarks, navigation, labeled form, native dialog
+│   ├── app.js                     # validation, estimates, dialog and status behavior
+│   └── styles.css                 # responsive layout and visible focus
+├── tests/
+│   ├── accessibility.spec.ts      # NEW six cases × desktop/mobile projects
+│   └── evidence-reporter.ts       # NEW JSON + Markdown, including failed runs
+├── scripts/serve.mjs              # NEW zero-dependency loopback server
+├── playwright.config.ts           # NEW browser, server, artifacts and reporters
+├── package.json                   # NEW local commands, pinned dependencies
+├── package-lock.json              # NEW reproducible npm ci dependency graph
+├── tsconfig.json                  # NEW strict type checking
+├── .gitignore                     # NEW ignores dependencies and generated runs
+├── test_specifications/
+│   └── 03_playwright_slice.md      # NEW acceptance matrix and manual review queue
+├── reports/
+│   ├── playwright/                # GENERATED on every run, ignored by git
+│   │   ├── evidence.json          # selectors, rules, impact, errors, statuses
+│   │   ├── summary.md             # automated findings + manual review queue
+│   │   ├── html/                  # Playwright HTML report + attached raw axe results
+│   │   └── artifacts/             # failure screenshots and traces
+│   └── examples/playwright/       # captured example run, not a current audit
+└── README.md                      # UPDATED entry point and boundaries
+```
+
+Root `README.md` also links this entry point. Existing Python files and fixtures are unchanged.
+
+### What is automated
+
+Default-page structure and axe scan; exact keyboard Tab order and skip link; keyboard-only successful simulation; label association; empty, zero, negative and over-limit validation plus recovery; current values in dialog; initial focus, bidirectional Tab containment, Escape/Cancel and focus return; 320 CSS px overflow smoke with default/dialog scans. A negative-control case injects an unnamed button into a fresh test page and verifies that axe reports `button-name`; expected injected findings are explicitly marked and kept separate from target defects.
+
+The suite uses axe WCAG 2 A/AA, 2.1 A/AA, 2.2 AA and best-practice tags. This is selected-rule/state coverage, **not WCAG certification**. Browser focus assertions do not validate screen-reader experience or visual focus quality.
+
+### Reports and interpretation
+
+- `reports/playwright/evidence.json`: per-test **Pass / Fail / Needs review**, assertion errors, axe version/environment, scan state, violations and incomplete nodes with selector, rule, impact, HTML and failure details.
+- `reports/playwright/summary.md`: readable results, detected issues and outstanding manual work.
+- `reports/playwright/html/index.html`: test results and attached full raw axe JSON, plus failure artifacts when available.
+- Automated gate: zero axe violations in baseline states and all behavioral assertions passing. `axe.incomplete` is **Needs review**. Expected injected negative-control defects are excluded from baseline quality judgments.
+- Overall remains **Needs review** until manual checks are executed. Screen-reader semantics/announcements, practical focus visibility/obstruction, zoom/text spacing, real-device responsive usability and full criterion coverage remain manual.
+
+See [acceptance criteria and manual queue](test_specifications/03_playwright_slice.md). Future GitHub Actions can run the same install/typecheck/test commands from this directory and upload `reports/playwright/` using an always-run artifact step; no architecture change is required. This slice does not add a workflow yet.
+
+---
+
+## Legacy Python static audit
+
+The material below describes the pre-existing static fixture and audit. Its example score is a custom heuristic, not a WCAG conformance percentage. Static HTML/attribute checks do not execute keyboard or dialog behavior, and historical compliance wording below must not be treated as certification.
+
 # ♿ Web3 DApp UX & Accessibility (A11y) Quality Engineering Use Case
 
 An enterprise-grade **Accessibility (A11y) & UX Quality Engineering Case Study** for modern Web3 / DApp interfaces (Token Swaps, Staking, and Wallet Connection Modals), aligned with **W3C WCAG 2.1 Level AA** standards and professional QA workflow skills (`07-design-accessibility-testcases`, `19-execute-accessibility-testing`, and `21-ui-ux-testing`).
