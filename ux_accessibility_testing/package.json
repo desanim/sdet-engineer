@@ -1,0 +1,29 @@
+{
+  "name": "sdet-web-quality-framework",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "demo": "node scripts/serve.mjs",
+    "test": "node scripts/run-tests.mjs smoke",
+    "test:full": "node scripts/run-tests.mjs full",
+    "test:ui": "node scripts/run-tests.mjs full --grep @functional",
+    "test:api": "node scripts/run-tests.mjs full --project api",
+    "test:a11y": "node scripts/run-tests.mjs full --grep @a11y",
+    "test:responsive": "node scripts/run-tests.mjs full --grep @responsive",
+    "test:headed": "node scripts/run-tests.mjs smoke --headed",
+    "typecheck": "tsc --noEmit",
+    "report": "playwright show-report reports/playwright/demo/smoke/html",
+    "report:full": "playwright show-report reports/playwright/demo/full/html"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.56.1",
+    "@types/node": "22.18.12",
+    "playwright-core": "1.56.1",
+    "typescript": "5.9.3"
+  }
+}

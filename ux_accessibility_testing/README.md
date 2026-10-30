@@ -1,111 +1,144 @@
-# ♿ Web3 DApp UX & Accessibility (A11y) Quality Engineering Use Case
+# Web Quality Automation Framework
 
-An enterprise-grade **Accessibility (A11y) & UX Quality Engineering Case Study** for modern Web3 / DApp interfaces (Token Swaps, Staking, and Wallet Connection Modals), aligned with **W3C WCAG 2.1 Level AA** standards and professional QA workflow skills (`07-design-accessibility-testcases`, `19-execute-accessibility-testing`, and `21-ui-ux-testing`).
+Playwright + TypeScript + axe-core for **Functional UI, API, Accessibility and Responsive** testing of websites/web apps on desktop, tablet and mobile profiles. The runnable application adapter is a local simulated DApp; framework utilities and device configuration are independent of its selectors.
 
----
+## Quick start
 
-## 📌 Use Case Overview
+Node.js 22+ and npm, from the repository root:
 
-While Web3 DApps excel at cryptographic security, they frequently suffer from severe **accessibility and usability barriers**:
-- **Screen Reader Invisibility:** Token selectors, slippage sliders, and icon buttons without accessible names (`aria-label`).
-- **Keyboard Traps:** Modals opening without trapping focus, leaving keyboard-only users stuck behind the backdrop.
-- **Low Contrast Warning Banners:** Gray text on dark backgrounds failing the WCAG 4.5:1 contrast requirement.
-- **Non-Semantic Controls:** Interactive `div` elements with `onclick` that cannot be navigated via `Tab` or activated with `Enter`/`Space`.
+```bash
+cd ux_accessibility_testing
+npm ci
+npx playwright install chromium firefox webkit
+npm run typecheck
+npm test                 # smoke: API once + desktop/tablet/mobile
+npm run test:full        # full browser/device matrix
+```
 
-This use case provides a **complete automated + manual testing framework** to audit, score, and remediate DApp interfaces.
+Linux/CI: `npx playwright install --with-deps chromium firefox webkit` also installs OS libraries and can require system package permissions. A missing browser/library is an infrastructure failure, never a passing test. The local server starts/stops automatically; port 4173 must be free. No wallet, RPC, account or API key is required.
 
----
+| Command | Scope |
+| --- | --- |
+| `npm test` | 11 smoke checks: 2 API + 3 UI cases on 3 profiles |
+| `npm run test:full` | 78 checks: 5 API, 9 UI cases on 8 profiles, 1 shared breakpoint sweep |
+| `npm run test:ui` | Functional UI suite across full device matrix |
+| `npm run test:api` | API contract/boundary/error cases, once without browser launch |
+| `npm run test:a11y` | axe scans, keyboard/focus and detector controls |
+| `npm run test:responsive` | Profile layout/tap checks and one breakpoint sweep |
+| `npm run test:headed` | Smoke in visible browsers, requires a desktop display |
+| `npm run demo` | Manual exploration at http://127.0.0.1:4173; stop before tests |
+| `npm run report` / `npm run report:full` | Open demo smoke/full HTML report |
 
-## 📂 Directory Structure
+Narrow a run with CLI options: `npm run test:full -- --project desktop-firefox --workers=2`. Smoke intentionally includes only `@smoke` tests, even when a project filter is provided. Use `test:full` to remove that tag filter.
+
+## Browser and device matrix
+
+| Project | Engine | Profile | Orientation | Smoke |
+| --- | --- | --- | --- | --- |
+| desktop-chromium | Chromium | 1440 × 900 | Landscape | Yes |
+| desktop-firefox | Firefox | 1440 × 900 | Landscape | No |
+| desktop-webkit | WebKit | 1440 × 900 | Landscape | No |
+| tablet-ipad-portrait | WebKit | Playwright iPad (gen 7), touch + DPR + UA | Portrait | Yes |
+| tablet-ipad-landscape | WebKit | Playwright iPad (gen 7) landscape | Landscape | No |
+| mobile-android-portrait | Chromium | Playwright Pixel 7, touch + DPR + UA | Portrait | Yes |
+| mobile-iphone-portrait | WebKit | Playwright iPhone 13, touch + DPR + UA | Portrait | No |
+| mobile-iphone-landscape | WebKit | Playwright iPhone 13 landscape | Landscape | No |
+| api | None | HTTP client, one execution | N/A | Yes |
+
+These are **browser/device emulations**, not real iPhone/iPad/Android or branded Safari/Chrome certification. Keyboard tests on touch profiles exercise synthetic hardware-keyboard input, not the on-screen mobile keyboard. The separate 320/375/768/1024/1440 CSS px sweep runs once on desktop Chromium; profile tests preserve each device's configured viewport. Landscape profiles are separate contexts, not a live rotation sensor test.
+
+Add profiles in `config/devices.ts`. Choose representative profiles based on the target app's users; multiplying every browser × every device is deliberately avoided.
+
+## Structure and responsibilities
 
 ```text
 ux_accessibility_testing/
-├── mock_dapp_ui/
-│   ├── index.html                         # Interactive Web3 Swap UI with realistic accessible patterns & defect scenarios
-│   ├── app.js                             # Focus trap, Escape key listener, modal & theme toggle handlers
-│   └── styles.css                         # Dark/Light theme styles, skip links, and touch target rules
-├── a11y_engine/
-│   ├── __init__.py
-│   ├── wcag_validator.py                  # Automated DOM auditor for WCAG 2.1 Level A & AA rules
-│   └── contrast_calculator.py             # W3C relative luminance & contrast ratio math engine
-├── test_specifications/
-│   ├── 01_wcag_accessibility_matrix.md   # Test condition & case matrix conforming to Skill 07 & 19
-│   └── 02_web3_ux_heuristics.md          # 10 Nielsen Usability Heuristics adapted for Web3 DeFi
 ├── config/
-│   └── a11y_rules.json                    # Conformance thresholds and quality gate rules
-├── run_a11y_audit.py                      # One-click CLI runner producing JSON & Markdown reports
-└── README.md                              # Use case documentation
+│   ├── devices.ts                 # browser/device matrix, smoke selection, API isolation
+│   └── targets.ts                 # registered apps, UI/API URLs, local-server decision
+├── framework/
+│   ├── test.ts                    # shared fixtures, browser runtime evidence, axe scanner
+│   ├── api.ts                     # opt-in JSON response evidence
+│   └── reporting/evidence-reporter.ts
+├── apps/demo/
+│   ├── SwapPage.ts                # demo-specific semantic locators and actions
+│   ├── QuoteClient.ts             # demo quote/health API client
+│   ├── fixtures.ts                # adapter fixtures composed from shared test fixture
+│   └── manual-review.json         # unexecuted manual accessibility queue
+├── tests/demo/
+│   ├── functional/swap.spec.ts
+│   ├── api/quotes.spec.ts
+│   ├── accessibility/{scan,keyboard}.spec.ts
+│   └── responsive/{layout,breakpoints}.spec.ts
+├── demo/{index.html,app.js,styles.css}
+├── scripts/{serve,run-tests}.mjs
+├── playwright.config.ts
+├── package.json / package-lock.json / tsconfig.json
+├── reports/playwright/demo/{smoke,full}/  # generated, ignored
+├── reports/examples/                    # captured snapshots, not current results
+├── test_specifications/04_web_framework.md
+├── mock_dapp_ui/                         # legacy intentionally defective fixture
+├── a11y_engine/                          # legacy static Python engine
+└── run_a11y_audit.py                     # independent legacy entry point
 ```
 
----
+## Add another website/web app
 
-## 🚀 How to Execute the Automated A11y Audit
+1. Create `apps/<name>/` with its Page Objects, API client, fixtures and manual review queue. Compose its fixtures from `framework/test.ts`; selectors/business rules stay in the adapter.
+2. Create `tests/<name>/{functional,api,accessibility,responsive}/` using those fixtures. Use tags `@functional`, `@api`, `@a11y`, `@responsive`; mark fast representative checks with `@smoke`.
+3. Add a registry entry in `config/targets.ts`, following `demo`, with the app's test directory and manual-review JSON. The registry is explicit: merely changing BASE_URL does not make DApp business tests valid for an unrelated site.
+4. Set `TEST_APP`, `BASE_URL` and optionally `API_BASE_URL` for the target you are authorized to test. BASE_URL disables the local fixture server. API_BASE_URL defaults to BASE_URL; when overriding API_BASE_URL, set BASE_URL explicitly too. APIs can have a separate host; the app adapter must reflect how its UI actually calls that API.
+5. Reuse the matrix, scan helper, fixtures and reporter. Extend suites for authentication/data cleanup as the target requires; this starter does not provide a universal login flow.
 
-Run the audit engine with 1 command:
+Example for a registered `storefront` adapter, bash:
+
+```bash
+TEST_APP=storefront BASE_URL=https://staging.example.com API_BASE_URL=https://api-staging.example.com npm run test:full
+```
+
+PowerShell equivalent:
+
+```powershell
+$env:TEST_APP="storefront"
+$env:BASE_URL="https://staging.example.com"
+$env:API_BASE_URL="https://api-staging.example.com"
+npm run test:full
+```
+
+There is no `.env` autoload or secret requirement. Never place credentials in URLs or attach private payloads. The demo client's response evidence is safe synthetic data; new adapters should explicitly select/redact evidence fields. The current demo uses root-relative routes; an application hosted at a subpath needs an adapter that models those paths.
+
+## Test coverage
+
+- **Functional:** real localhost quote request → server validation → current values in dialog → simulated confirmation; invalid input prevents HTTP requests; API failure presents recovery and a successful retry.
+- **API:** health/JSON contract, valid lower/normal/upper boundaries, wrong types and invalid ranges, malformed JSON, payload limit, method/Allow header and unknown route.
+- **Accessibility:** heading/landmarks, labels/error descriptions, default/error/dialog axe scans, Tab order, skip link, dialog entry/containment/Escape/Cancel/focus return; isolated unnamed-button detector control.
+- **Responsive:** no horizontal overflow in default/dialog states; visible confirmation control; tap interaction on touch profiles; screenshots per profile; shared breakpoint sweep and 320px axe scans.
+
+See [acceptance criteria](test_specifications/04_web_framework.md). The earlier [slice specification](test_specifications/03_playwright_slice.md) and `reports/examples/playwright/` are historical V1 material; current commands and paths are in this README.
+
+## Evidence, gates and manual review
+
+Each run writes `reports/playwright/<app>/<smoke|full>/`:
+
+- `evidence.json`: test status/errors, suite, declared coverage, actual browser version/UA/viewport/DPR/touch mode, API responses, state-specific axe nodes with selector/rule/impact/failure details, matrix and counts.
+- `summary.md`: readable outcomes, findings and manual queue.
+- `html/index.html`: Playwright report with raw axe JSON, response/coverage/runtime attachments and profile screenshots.
+- `artifacts/`: failure screenshots and traces.
+
+Smoke and full outputs are separate. A later filtered run in the same mode replaces that mode's previous report; use the recorded test/project counts to understand its scope. Simultaneous runs for the same app/mode are unsupported. Reports reset to a running marker at start; abrupt termination can leave that marker.
+
+`npm test`/`test:full` exits nonzero on assertion, baseline axe violation or infrastructure failure. `axe.incomplete` is **Needs review**. Negative-control findings are isolated and excluded from baseline counts; the detector test passes only when its injected defect is detected. API cases run once rather than being repeated for each device.
+
+Automated **Pass** is limited to executed assertions. Skipped/interrupted cases are **Needs review**, not Pass. Accessibility overall remains **Needs review** until manual work is executed: screen-reader semantics and announcements; practical focus visibility/obstruction; zoom/text spacing/forced colors; real-device usability and full applicable WCAG 2.2 A/AA coverage. Browser emulation, an overflow smoke or zero axe violations cannot establish WCAG conformance.
+
+## GitHub Actions
+
+`.github/workflows/web-quality.yml` runs smoke for module changes in PRs and pushes to main, and offers manual smoke/full dispatch. It installs all browser dependencies, typechecks, runs the same tests and uploads reports even after failures. No account secrets or scheduled automation are configured. CI execution status must be checked in GitHub separately from local validation.
+
+## Legacy Python audit
+
 ```bash
 python ux_accessibility_testing/run_a11y_audit.py
 ```
 
-### Sample Audit Console Output
-
-```text
-=====================================================================================
- ♿ SDET ACCESSIBILITY & UX AUDITOR: WCAG 2.1 LEVEL AA CONFORMANCE SCAN 
-=====================================================================================
- • Target Interface: mock_dapp_ui/index.html
- • Target Standard : WCAG 2.1 (Level A & Level AA)
- • Methodologies   : Automated Static Analysis + Rule Invariants
-=====================================================================================
-
-CRITERION                           | SEVERITY   | STATUS   | DETAIL                   
--------------------------------------------------------------------------------------
-2.4.1 Bypass Blocks (Level A)       | None       | PASS     | Skip-to-content link f...
-1.1.1 Non-text Content (Level A)    | None       | PASS     | Image <img src="usdc-l...
-1.3.1 Info and Relationships (Le    | None       | PASS     | Input #pay-amount-inpu...
-1.3.1 Landmarks Structure (Level    | None       | PASS     | Document correctly use...
-4.1.2 Dialog Pattern (Level A)      | None       | PASS     | Modal dialog correctly...
-1.1.1 Non-text Content (Level A)    | Critical   | FAIL     | Image element complete...
-4.1.2 Name, Role, Value (Level A)   | Critical   | FAIL     | Button contains only a...
-2.1.1 Keyboard Accessible (Level    | Critical   | FAIL     | Custom interactive con...
-1.4.3 Contrast (Minimum) (Level     | Serious    | FAIL     | Color contrast ratio 2...
--------------------------------------------------------------------------------------
-SUMMARY: Compliance Score: 60.0% | Passed: 6 | Violations: 4
-=====================================================================================
-
-[⚠️] DETECTED ACCESSIBILITY VIOLATIONS & REMEDIATION GUIDANCE:
-
- 1. [CRITICAL] 1.1.1 Non-text Content (Level A)
-    • Offending Element: <img src="eth-logo.png">
-    • Problem          : Image element completely missing 'alt' attribute.
-    • How to Fix       : Add meaningful alt="Ethereum Logo" or alt="" if decorative.
-
- 2. [CRITICAL] 4.1.2 Name, Role, Value (Level A)
-    • Offending Element: <button id="settings-btn">
-    • Problem          : Button contains only an icon with no accessible text.
-    • How to Fix       : Add aria-label="Transaction Settings" to the icon button.
-
- 3. [CRITICAL] 2.1.1 Keyboard Accessible (Level A)
-    • Offending Element: <div class="slippage-badge" onclick="...">
-    • Problem          : Custom interactive control built with non-semantic element.
-    • How to Fix       : Replace with native <button> or add role='button' and tabindex='0'.
-
- 4. [SERIOUS] 1.4.3 Contrast (Minimum) (Level AA)
-    • Offending Element: <div class="low-contrast-warning">
-    • Problem          : Color contrast ratio 2.6:1 fails WCAG Level AA (min 4.5:1).
-    • How to Fix       : Increase text brightness to at least #9da3b4 for ratio >= 4.5:1.
-
-[❌] QUALITY GATE FAILED: Found 3 Critical A11y violations blocking release.
-```
-
----
-
-## 🎯 Key Standards & Specifications Tracked
-
-| Standard | Conformance Rule | Verification Method |
-| :--- | :--- | :--- |
-| **WCAG 1.1.1** | Non-text Content (`alt` attributes on tokens & badges) | Automated DOM Check |
-| **WCAG 1.4.3** | Color Contrast (Minimum 4.5:1 for normal text) | Mathematical Relative Luminance |
-| **WCAG 2.1.1** | Keyboard Operability (All interactive controls reachable via `Tab`) | DOM Semantic & Attribute Audit |
-| **WCAG 2.4.1** | Bypass Blocks (Skip to main content link) | Anchor Target Verification |
-| **WCAG 2.4.3** | Focus Order & Dialog Trapping (Modal focus management) | JavaScript Keyboard Trap |
-| **WCAG 4.1.2** | Name, Role, Value (`aria-label`, `aria-modal`, `role="dialog"`) | ARIA Attribute Conformance |
+Run that command from the repository root with the repository's Python dependencies installed. It still targets `mock_dapp_ui/`, which intentionally contains defects. Its custom score and historical compliance wording do not establish WCAG conformance; static attribute checks do not execute browser keyboard/focus behavior. The Python engine and original fixture remain independent of this browser framework.

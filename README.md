@@ -71,8 +71,11 @@ sdet-engineer/
 │   ├── test_dex_swap_concurrency.py# MEV & Slippage concurrency test on AMM constant product pool
 │   ├── test_nonce_race_condition.py# Nonce collision and out-of-order execution test under high concurrency
 │   └── run_web3_suites.py          # Master runner for automated Web3 test suite execution
-├── ux_accessibility_testing/       # Web3 DApp UX & Accessibility (WCAG 2.1 AA) quality engineering
-│   ├── mock_dapp_ui/               # Interactive Token Swap DApp interface with accessible state management
+├── ux_accessibility_testing/       # Functional UI, API, A11y and responsive browser framework
+│   ├── config/, framework/         # Device matrix, target registry, fixtures and evidence reporter
+│   ├── apps/, tests/               # Application adapters and four browser/API suites
+│   ├── demo/                       # Local UI + quote API flow
+│   ├── mock_dapp_ui/               # Legacy intentionally defective static fixture
 │   ├── a11y_engine/                # DOM Auditor & W3C Color Contrast math calculator
 │   ├── test_specifications/        # WCAG 2.1 case matrix (Skill 07/19) & 10 UX Heuristics (Skill 21)
 │   └── run_a11y_audit.py           # Automated accessibility scanner & report generator
@@ -130,7 +133,7 @@ python sdet_core/rpc_runner.py --threads 20 --rampup 5 --duration 30 --host loca
 ```
 
 ### 6. Run Web3 DApp UX & Accessibility (WCAG 2.1 AA) Audit
-Audit the DApp user interface for screen reader accessibility, keyboard focus traps, and color contrast:
+Run heuristic static checks against the intentionally defective fixture (screen-reader and practical focus behavior require browser/manual testing):
 ```bash
 python ux_accessibility_testing/run_a11y_audit.py
 ```
@@ -190,3 +193,18 @@ TOTAL / AGGREGATE            | 2600     | 0.0 %  | 18.5    | 42.1    | 55.4    |
 ## 👤 Author & Maintainer
 - **GitHub**: [@desanim](https://github.com/desanim)
 - **Role**: Blockchain / Web3 Software Development Engineer in Test (SDET)
+
+## Reusable Web QA framework
+
+[Playwright + TypeScript + axe-core framework](ux_accessibility_testing/README.md) covers Functional UI, API, Accessibility and Responsive tests. Shared fixtures/reporting are separate from app adapters; desktop Chromium/Firefox/WebKit, tablet and mobile profiles are configured centrally.
+
+```bash
+cd ux_accessibility_testing
+npm ci
+npx playwright install chromium firefox webkit
+npm run typecheck
+npm test           # smoke: API once + desktop/tablet/mobile
+npm run test:full  # full 8-profile browser/device matrix
+```
+
+JSON/Markdown/HTML reports are generated under `ux_accessibility_testing/reports/playwright/<app>/<smoke|full>/`. See the module README for per-suite commands, new-app onboarding, CI and manual review boundaries. Emulation is not real-device verification; automated passes do not establish WCAG conformance. The Python static-audit flow remains independent.

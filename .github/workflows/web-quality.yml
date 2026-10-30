@@ -1,0 +1,43 @@
+name: Web quality framework
+on:
+  pull_request:
+    paths: ['ux_accessibility_testing/**', '.github/workflows/web-quality.yml']
+  push:
+    branches: [main]
+    paths: ['ux_accessibility_testing/**', '.github/workflows/web-quality.yml']
+  workflow_dispatch:
+    inputs:
+      matrix:
+        description: Browser/device matrix
+        type: choice
+        options: [smoke, full]
+        default: smoke
+permissions:
+  contents: read
+jobs:
+  web-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ux_accessibility_testing
+    env:
+      TEST_MATRIX: ${{ inputs.matrix || 'smoke' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: ux_accessibility_testing/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run typecheck
+      - run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-quality-${{ env.TEST_MATRIX }}
+          path: ux_accessibility_testing/reports/playwright/
+          retention-days: 14
+          if-no-files-found: warn
